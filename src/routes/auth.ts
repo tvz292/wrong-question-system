@@ -11,6 +11,21 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
   try {
     const { username, email, password } = req.body;
 
+    // Check if user already exists
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { username }
+        ]
+      }
+    });
+
+    if (existingUser) {
+      res.status(400).json({ error: 'User with this email or username already exists' });
+      return;
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
@@ -27,7 +42,8 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
 
     res.status(201).json({ token });
   } catch (error) {
-    res.status(400).json({ error: 'Registration failed' });
+    console.error('Registration error details:', error);
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Registration failed' });
   }
 });
 
