@@ -1,0 +1,26 @@
+<h2>選擇新專案的架構方向</h2>
+<p class="subtitle">我們將重新建立系統，解決之前的部署痛點。請選擇一個您感興趣的方向：</p>
+
+<div class="options">
+  <div class="option" data-choice="fullstack-nextjs" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>統一全端 (Next.js + Prisma)</h3>
+      <p>將後端邏輯整合進 Next.js API Routes。優點：部署最簡單（Vercel 一鍵完成）、程式碼共用方便、效能優。缺點：後端邏輯過重時較難維護。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="separated-docker" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>現代化分離架構 (Next.js + Express + Docker)</h3>
+      <p>維持前後端分離，但引入標準化 Docker 配置。優點：彈性最高、適合大型應用、易於遷移平台。缺點：需要維護 Docker 映像檔與網路設定。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="serverless-managed" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>託管型伺服器架構 (Next.js + Supabase)</h3>
+      <p>使用 Supabase 處理資料庫與驗證。優點：幾乎不需要寫後端 API、開發速度極快、自動擴展。缺點：依賴第三方平台、邏輯受限。</p>
+    </div>
+  </div>
+</div>

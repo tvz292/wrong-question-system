@@ -15,15 +15,28 @@ questionRouter.post('/', authMiddleware, async (req: AuthRequest, res: Response)
       return;
     }
 
-    const question = await prisma.question.create({
-      data: {
-        contentText,
-        imageUrl,
-        tags: tags || [],
-        difficulty: difficulty || 3,
-        source: source || 'MANUAL',
-        creatorId
-      }
+    const question = await prisma.$transaction(async (tx) => {
+      const newQuestion = await tx.question.create({
+        data: {
+          contentText,
+          imageUrl,
+          tags: tags || [],
+          difficulty: difficulty || 3,
+          source: source || 'MANUAL',
+          creatorId
+        }
+      });
+
+      // Automatically create an incorrect record for the user who created it
+      await tx.incorrectRecord.create({
+        data: {
+          userId: creatorId,
+          questionId: newQuestion.id,
+          status: 'TO_REVIEW'
+        }
+      });
+
+      return newQuestion;
     });
 
     res.status(201).json(question);
@@ -34,7 +47,7 @@ questionRouter.post('/', authMiddleware, async (req: AuthRequest, res: Response)
 });
 
 // Fetch questions with optional tag filtering
-questionRouter.get('/', async (req, res) => {
+questionRouter.get('/', authMiddleware, async (req, res) => {
   try {
     const { tag } = req.query;
 

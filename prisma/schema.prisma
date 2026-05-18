@@ -19,8 +19,6 @@ model User {
   classId       String?
   records       IncorrectRecord[]
   questionsCreated Question[]
-
-  @@map("users")
 }
 
 model Question {
@@ -33,8 +31,6 @@ model Question {
   createdBy   User     @relation(fields: [creatorId], references: [id])
   creatorId   String
   records     IncorrectRecord[]
-
-  @@map("questions")
 }
 
 model IncorrectRecord {
@@ -47,8 +43,6 @@ model IncorrectRecord {
   reviewCount    Int      @default(0)
   lastReviewedAt DateTime?
   studentAnswer  String?
-
-  @@map("incorrect_records")
 }
 
 enum Role {

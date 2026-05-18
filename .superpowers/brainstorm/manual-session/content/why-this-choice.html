@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>為什麼選擇這個方案？</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; }
+        .reason-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .title { font-weight: bold; color: #007bff; font-size: 1.2em; margin-bottom: 10px; display: block; }
+        .highlight { background: #fff3cd; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>針對非工程背景開發者的 MVP 建議</h1>
+    
+    <div class="reason-box">
+        <span class="title">1. 資料庫：選擇「雲端託管」(Neon)</span>
+        <p><strong>為什麼？</strong> 自建資料庫就像自己蓋發電機，壞了要自己修、沒電要自己補。雲端託管就像「插座」，插上就能用。它會自動備份，且在 MVP 階段幾乎是免費的。</p>
+    </div>
+
+    <div class="reason-box">
+        <span class="title">2. 部署方式：選擇「GitHub 直接連動」</span>
+        <p><strong>為什麼？</strong> 正式環境若用 Docker，您需要學習如何「打包」並「存放」映像檔，這對非專業人員來說多了一層技術門檻。直接連結 GitHub，只要我幫您把程式碼寫好並推送到 GitHub，伺服器就會自動更新上線。</p>
+    </div>
+
+    <div class="reason-box">
+        <span class="title">3. 開發環境：我會負責處理 Docker</span>
+        <p><strong>為什麼？</strong> 我會在您的電腦上配置 Docker，確保我在協助您開發時，環境是穩定的。您只需要執行簡單的指令，就能啟動所有服務。</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>錯題系統 MVP 設計方案</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .section { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        h2 { color: #007bff; border-left: 4px solid #007bff; padding-left: 10px; }
+        .tech-tag { display: inline-block; background: #e9ecef; padding: 3px 10px; border-radius: 15px; font-size: 0.9em; margin-right: 5px; margin-bottom: 5px; }
+        .flow { background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>錯題管理系統 MVP 設計方案</h1>
+
+    <div class="section">
+        <h2>1. 技術棧 (Tech Stack)</h2>
+        <div class="tech-tag">Next.js (前端)</div>
+        <div class="tech-tag">Express (後端 API)</div>
+        <div class="tech-tag">Prisma (資料庫工具)</div>
+        <div class="tech-tag">PostgreSQL (資料庫)</div>
+        <div class="tech-tag">Docker (本地開發環境)</div>
+    </div>
+
+    <div class="section">
+        <h2>2. 資料流向 (Data Flow)</h2>
+        <div class="flow">
+            使用者瀏覽器 <br>
+            &nbsp;&nbsp;↳ [前端 Vercel] 送出請求 <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;↳ [後端 Render] 處理邏輯 <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ [Prisma] 溝通資料 <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ [雲端 Neon DB] 存取資料
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. 部署與運維策略</h2>
+        <ul>
+            <li><strong>自動化部署</strong>：推送程式碼到 GitHub 後，Vercel 與 Render 會自動偵測並更新。</li>
+            <li><strong>環境隔離</strong>：
+                <ul>
+                    <li>開發環境：使用 Docker 模擬資料庫。</li>
+                    <li>正式環境：連接雲端 Neon 資料庫。</li>
+                </ul>
+            </li>
+            <li><strong>安全性</strong>：敏感資訊（資料庫密碼等）存放在環境變數中，不進入 GitHub。</li>
+        </ul>
+    </div>
+</body>
+</html>

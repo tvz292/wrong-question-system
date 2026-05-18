@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MVP 推薦架構</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; }
+        .architecture { background: #f4f4f9; border-radius: 8px; padding: 20px; border-left: 5px solid #28a745; }
+        .component { margin-bottom: 15px; }
+        .label { font-weight: bold; color: #28a745; }
+        .arrow { text-align: center; font-size: 20px; margin: 10px 0; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>MVP 快速部署架構建議</h1>
+    <p>既然是 MVP，我們的目標是<strong>「最低維運成本」</strong>與<strong>「最快上線速度」</strong>。</p>
+    
+    <div class="architecture">
+        <div class="component">
+            <span class="label">前端 (Next.js):</span> 部署至 <strong>Vercel</strong> (自動化 CI/CD)
+        </div>
+        <div class="arrow">⬇️ API 請求</div>
+        <div class="component">
+            <span class="label">後端 (Express):</span> 部署至 <strong>Render / Fly.io</strong> (Docker 映像檔或直接部署)
+        </div>
+        <div class="arrow">⬇️ 資料存取</div>
+        <div class="component">
+            <span class="label">資料庫 (PostgreSQL):</span> 使用 <strong>Neon (Serverless DB)</strong> 
+            <br><small>※ 免費額度足夠 MVP 使用，免去 Docker 維運麻煩。</small>
+        </div>
+    </div>
+</body>
+</html>

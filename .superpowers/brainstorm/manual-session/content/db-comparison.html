@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>資料庫方案比較</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; }
+        .comparison { display: flex; gap: 20px; margin-top: 20px; }
+        .card { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #f9f9f9; }
+        .card.recommended { border: 2px solid #007bff; background: #f0f7ff; position: relative; }
+        .recommended-badge { position: absolute; top: -12px; right: 10px; background: #007bff; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; }
+        h2 { margin-top: 0; }
+        ul { padding-left: 20px; }
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-bottom: 10px; }
+        .tag-managed { background: #e3f2fd; color: #0d47a1; }
+        .tag-self { background: #f5f5f5; color: #616161; }
+    </style>
+</head>
+<body>
+    <h1>資料庫方案決策：託管 vs. 自建</h1>
+    <p>針對您的「分離式架構 + Docker」規劃，我們需要決定 PostgreSQL 的執行方式：</p>
+    
+    <div class="comparison">
+        <div class="card recommended">
+            <div class="recommended-badge">推薦 (開發快速)</div>
+            <span class="tag tag-managed">雲端託管 (如 Neon / Supabase)</span>
+            <h2>方案 A：Cloud-hosted</h2>
+            <ul>
+                <li><strong>優點：</strong> 免維護、自動備份、支援 Serverless 縮放、容易與 Vercel/Render 整合。</li>
+                <li><strong>缺點：</strong> 依賴外部服務、若超過免費額度可能有費用。</li>
+                <li><strong>適用場景：</strong> 快速迭代、希望專注於功能開發而非維運。</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <span class="tag tag-self">容器化自建 (Docker)</span>
+            <h2>方案 B：Containerized</h2>
+            <ul>
+                <li><strong>優點：</strong> 完全掌握資料、環境完全一致 (Dev/Prod)、無額外成本 (若 VPS 空間夠)。</li>
+                <li><strong>缺點：</strong> 需自行負責 Migration、備份與效能調校。</li>
+                <li><strong>適用場景：</strong> 對資料隱私有極高要求、或希望在單一伺服器運行所有服務。</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

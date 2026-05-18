@@ -1,0 +1,28 @@
+<h2>部署與資料庫規劃</h2>
+<p class="subtitle">既然選擇了分離架構與 Docker，我們需要決定資料庫的處理方式：</p>
+
+<div class="options">
+  <div class="option" data-choice="managed-db" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>完全雲端託管 (推薦)</h3>
+      <p>使用 Neon, Supabase (Postgres) 或 Railway 的資料庫。優點：部署最穩，不必擔心資料庫容器掛掉或磁碟空間。缺點：需註冊新平台。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="dockerized-db" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>全容器化 (Docker Compose)</h3>
+      <p>將資料庫也放在 Docker 容器中。優點：環境完全一致，適合本地開發。缺點：上線到 Render/Railway 等平台時，通常需要額外設定 Persistent Volume 或直接使用平台的資料庫服務。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>後續規劃：</h3>
+  <ul>
+    <li><b>後端：</b>編譯為 JS 後執行，移除動態 DB Sync 邏輯。</li>
+    <li><b>前端：</b>優化 API URL 配置，增加錯誤處理。</li>
+    <li><b>自動化：</b>建立 Dockerfile 與 CI/CD 流程。</li>
+  </ul>
+</div>

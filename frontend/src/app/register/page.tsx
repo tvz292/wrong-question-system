@@ -11,11 +11,12 @@ export default function RegisterPage() {
     username: '',
     email: '',
     password: '',
+    role: 'STUDENT',
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -40,7 +41,13 @@ export default function RegisterPage() {
       }
 
       localStorage.setItem('token', data.token);
-      router.push('/dashboard');
+      
+      // Redirect based on role
+      if (data.role === 'TEACHER' || data.role === 'ADMIN') {
+        router.push('/analytics');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       setSubmitting(false);
@@ -52,6 +59,19 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit} className={styles.form}>
         <h1>註冊新帳號</h1>
         {error && <p className={styles.error}>{error}</p>}
+        <div className={styles.formGroup}>
+          <label htmlFor="role">您的身分</label>
+          <select
+            id="role"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className={styles.inputField}
+          >
+            <option value="STUDENT">學生</option>
+            <option value="TEACHER">老師</option>
+          </select>
+        </div>
         <div className={styles.formGroup}>
           <label htmlFor="username">使用者名稱</label>
           <input
@@ -98,3 +118,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+

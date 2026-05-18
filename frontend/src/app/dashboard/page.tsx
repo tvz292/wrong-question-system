@@ -8,10 +8,13 @@ import styles from './dashboard.module.css';
 
 interface Record {
   id: string;
-  contentText: string;
-  source: string;
-  tags: string[];
-  createdAt: string;
+  status: string;
+  question: {
+    contentText: string;
+    source: string;
+    tags: string[];
+  };
+  lastReviewedAt: string;
 }
 
 export default function Dashboard() {
@@ -22,8 +25,15 @@ export default function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    
     if (!token) {
       router.push('/login');
+      return;
+    }
+    
+    if (role === 'TEACHER' || role === 'ADMIN') {
+      router.push('/analytics');
       return;
     }
 
@@ -59,6 +69,7 @@ export default function Dashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     router.push('/login');
   };
 
@@ -87,10 +98,10 @@ export default function Dashboard() {
             records.map((record) => (
               <QuestionCard
                 key={record.id}
-                contentText={record.contentText}
-                source={record.source}
-                tags={record.tags}
-                createdAt={record.createdAt}
+                contentText={record.question?.contentText || '無題目內容'}
+                source={record.question?.source || '未知'}
+                tags={record.question?.tags || []}
+                createdAt={record.lastReviewedAt || ''}
               />
             ))
           )}

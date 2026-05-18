@@ -39,7 +39,13 @@ export default function LoginPage() {
       }
 
       localStorage.setItem('token', data.token);
-      router.push('/dashboard');
+      localStorage.setItem('role', data.role); // Store role for UI checks
+
+      if (data.role === 'TEACHER' || data.role === 'ADMIN') {
+        router.push('/analytics');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       setSubmitting(false);

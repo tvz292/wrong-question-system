@@ -9,7 +9,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 authRouter.post('/register', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
+
+    // Validate role if provided
+    const validRoles = ['STUDENT', 'TEACHER', 'ADMIN'];
+    const assignedRole = role && validRoles.includes(role) ? role : 'STUDENT';
 
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
@@ -33,6 +37,7 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
         username,
         email,
         passwordHash: hashedPassword,
+        role: assignedRole,
       },
     });
 
@@ -40,7 +45,7 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
       expiresIn: '24h',
     });
 
-    res.status(201).json({ token });
+    res.status(201).json({ token, role: user.role });
   } catch (error) {
     console.error('Registration error details:', error);
     res.status(400).json({ error: error instanceof Error ? error.message : 'Registration failed' });
@@ -71,7 +76,7 @@ authRouter.post('/login', async (req: Request, res: Response): Promise<void> => 
       expiresIn: '24h',
     });
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, role: user.role });
   } catch (error) {
     res.status(500).json({ error: 'Login failed' });
   }
