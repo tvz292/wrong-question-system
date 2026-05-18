@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: wrong-question-api
+    env: node
+    plan: free
+    buildCommand: "npm install && npm run build && npx prisma migrate deploy"
+    startCommand: "npm run start"
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        sync: false # 需在 Render 後台手動填入 Neon 提供的 URL
+      - key: JWT_SECRET
+        generateValue: true # Render 會自動產生一組安全密鑰
