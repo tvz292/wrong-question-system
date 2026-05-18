@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "ts-node src/server.ts"
+    "start": "npx prisma migrate deploy && ts-node src/server.ts"
   },
   "keywords": [],
   "author": "",
