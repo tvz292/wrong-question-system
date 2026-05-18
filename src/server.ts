@@ -15,25 +15,6 @@ const PORT = Number(process.env.PORT) || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Emergency Database Synchronization
-async function ensureDatabaseIsReady() {
-  try {
-    console.log('Ensuring database schema is synced...');
-    // Force sync the schema to the database programmatically
-    execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit' });
-    console.log('Database schema sync completed');
-    
-    await prisma.$connect();
-    await prisma.user.count();
-    console.log('Database connection and tables verified');
-  } catch (err: any) {
-    console.error('CRITICAL DATABASE ERROR:', err.message);
-    // Don't exit yet, try to run anyway but we've logged the failure
-  }
-}
-
-ensureDatabaseIsReady();
-
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/questions', questionRouter);
@@ -44,8 +25,26 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
 });
 
+// 1. Start server IMMEDIATELY to satisfy Render's port check
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
+  
+  // 2. Perform database sync in the BACKGROUND
+  ensureDatabaseIsReady();
 });
+
+async function ensureDatabaseIsReady() {
+  const { exec } = require('child_process');
+  console.log('Starting background database sync...');
+  
+  exec('npx prisma db push --accept-data-loss', (error: any, stdout: any, stderr: any) => {
+    if (error) {
+      console.error('BACKGROUND DB SYNC FAILED:', error.message);
+      return;
+    }
+    console.log('Database schema sync completed successfully');
+    console.log(stdout);
+  });
+}
 
 export default app;
