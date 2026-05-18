@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
+import cors from 'cors';
 import { authRouter } from './routes/auth';
 import { questionRouter } from './routes/questions';
 import { recordsRouter } from './routes/records';
@@ -9,6 +10,7 @@ import { recordsRouter } from './routes/records';
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 
+app.use(cors());
 app.use(express.json());
 
 // Routes
