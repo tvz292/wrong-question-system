@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import QuestionCard from '@/components/QuestionCard';
 import styles from './dashboard.module.css';
@@ -14,14 +15,16 @@ interface Record {
 }
 
 export default function Dashboard() {
+  const router = useRouter();
   const [records, setRecords] = useState<Record[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Mock Auth: Ensure a token exists
-    if (typeof window !== 'undefined' && !localStorage.getItem('token')) {
-      localStorage.setItem('token', 'mock-token-123');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
     }
 
     const fetchRecords = async () => {
@@ -29,9 +32,16 @@ export default function Dashboard() {
       try {
         const response = await fetch(`${apiUrl}/api/records`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
+        
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          router.push('/login');
+          return;
+        }
+
         if (!response.ok) {
           throw new Error('Failed to fetch records');
         }
@@ -45,15 +55,25 @@ export default function Dashboard() {
     };
 
     fetchRecords();
-  }, []);
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/login');
+  };
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <h1>我的錯題本</h1>
-        <Link href="/upload" className={styles.uploadButton}>
-          新增錯題
-        </Link>
+        <div className={styles.headerButtons}>
+          <Link href="/upload" className={styles.uploadButton}>
+            新增錯題
+          </Link>
+          <button onClick={handleLogout} className={styles.logoutButton}>
+            登出
+          </button>
+        </div>
       </header>
 
       {loading && <p>載入中...</p>}

@@ -25,6 +25,19 @@ export default function UploadPage() {
     setSubmitting(true);
     setError(null);
 
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    const sourceMap: Record<string, string> = {
+      '考卷': 'FILE',
+      '練習本': 'MANUAL',
+      '課本': 'MANUAL',
+      '其他': 'MANUAL'
+    };
+
     const tagsArray = formData.tags
       .split(',')
       .map((tag) => tag.trim())
@@ -36,17 +49,24 @@ export default function UploadPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           contentText: formData.contentText,
-          source: formData.source,
+          source: sourceMap[formData.source] || 'MANUAL',
           tags: tagsArray,
         }),
       });
 
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        router.push('/login');
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to upload question');
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to upload question');
       }
 
       router.push('/dashboard');
