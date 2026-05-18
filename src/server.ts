@@ -15,20 +15,26 @@ app.use(cors());
 app.use(express.json());
 
 // Database connection check
-prisma.$connect()
-  .then(async () => {
+async function checkDatabase() {
+  try {
+    console.log('Connecting to database...');
+    await prisma.$connect();
     console.log('Successfully connected to database');
-    // Simple query to verify tables exist
-    try {
-      await prisma.user.count();
-      console.log('Database tables verified');
-    } catch (err) {
-      console.error('Database tables check failed:', err);
+    
+    // Attempt a count on the users table (mapped to lowercase users)
+    await prisma.user.count();
+    console.log('Database tables verified');
+  } catch (err: any) {
+    console.error('DATABASE READINESS ERROR:', err.message);
+    if (err.message.includes('does not exist')) {
+      console.error('CRITICAL: Tables are missing. Attempting emergency fix might be needed.');
     }
-  })
-  .catch((err) => {
-    console.error('Failed to connect to database:', err);
-  });
+    // In production, we want to know it failed
+    process.exit(1);
+  }
+}
+
+checkDatabase();
 
 // Routes
 app.use('/api/auth', authRouter);
