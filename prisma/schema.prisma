@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String   @id @default(uuid())
+  username      String   @unique
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(STUDENT)
+  classId       String?
+  records       IncorrectRecord[]
+  questionsCreated Question[]
+}
+
+model Question {
+  id          String   @id @default(uuid())
+  contentText String?
+  imageUrl    String?
+  tags        Json
+  difficulty  Int      @default(3)
+  source      Source   @default(MANUAL)
+  createdBy   User     @relation(fields: [creatorId], references: [id])
+  creatorId   String
+  records     IncorrectRecord[]
+}
+
+model IncorrectRecord {
+  id             String   @id @default(uuid())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
+  question       Question @relation(fields: [questionId], references: [id])
+  questionId     String
+  status         Status   @default(TO_REVIEW)
+  reviewCount    Int      @default(0)
+  lastReviewedAt DateTime?
+  studentAnswer  String?
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum Source {
+  PHOTO
+  MANUAL
+  FILE
+}
+
+enum Status {
+  TO_REVIEW
+  MASTERED
+}
