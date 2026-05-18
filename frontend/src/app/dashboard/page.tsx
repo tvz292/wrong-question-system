@@ -25,8 +25,9 @@ export default function Dashboard() {
     }
 
     const fetchRecords = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       try {
-        const response = await fetch('http://localhost:3001/api/records', {
+        const response = await fetch(`${apiUrl}/api/records`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
